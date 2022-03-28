@@ -17,7 +17,8 @@ read_tip_data <- function(method, base_dir = '../../data'){
 # Used in compute_pars_for_gene()
 get_parsimony_permutations <- function(tree, tip_states, n_perm = 1000){
 
-  n_total_perm <- multinom(tip_states, counts = FALSE, useDouble = FALSE)
+  # this only finishes in appreciable time if the tree is small (otherwise just use n_perm)
+  n_total_perm <- multinom(tip_states, counts = FALSE, useDouble = TRUE)
   n_true_perm <- min(n_total_perm, n_perm)
 
   n_pres = sum(tip_states)

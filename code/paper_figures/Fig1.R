@@ -1,7 +1,7 @@
 ####################################
 # Plotting Fig 1
 #
-# Author: J.S.Huisman, Nov 2021
+# Author: J.S.Huisman, March 2022
 ####################################
 
 library(ape)
@@ -161,4 +161,51 @@ cgMLST_plot +
 ggsave(paste0(fig_folder, '/Fig1.pdf'), width = 15, height = 10, device="pdf")
 
 
+###########################################################################
+#Add supplementary figure with other IncFIB trees
+new_colour_map <- function(x){
+  if (x == 'Illumina_SPAdes'){
+    return(factor("Illumina", levels = c("Illumina", "NP", "PB")))
+  } else if (grepl('NP', x, fixed = TRUE)){
+    return(factor("NP", levels = c("Illumina", "NP", "PB")))
+  } else {
+    return(factor("PB", levels = c("Illumina", "NP", "PB")))
+  }
+}
+
+plasmid_tree_list = lapply(methods, function(method){read_plasmid_mcc_tree(method, 'IncFIB_AP001918')})
+class(plasmid_tree_list) <- "multiPhylo"
+names(plasmid_tree_list) <- methods
+
+ggtree(plasmid_tree_list, layout='roundrect', aes(colour = sapply(.id, new_colour_map)), ladderize = FALSE ) +
+  facet_wrap(vars(.id), labeller = labeller(.id = method_labels)) +
+  geom_treescale(width = 10, x = 0.1) +
+  geom_tiplab(size=4, linesize=.5, align = FALSE, show.legend = F) + 
+  xlim(0, 60) + 
+  scale_color_manual(values = c('red', 'black', 'grey')) +
+  labs(colour = 'Method') +
+  theme_void() +
+  theme(legend.position = 'bottom',
+        text = element_text(size = 20))
+
+ggsave(paste0(fig_folder, '/FigS_IncFIB_trees.pdf'), width = 10, height = 15, device="pdf")
+
+##### IncI1
+
+plasmid_tree_list = lapply(methods, function(method){read_plasmid_mcc_tree(method, 'IncI1')})
+class(plasmid_tree_list) <- "multiPhylo"
+names(plasmid_tree_list) <- methods
+
+ggtree(plasmid_tree_list, layout='roundrect', aes(colour = sapply(.id, new_colour_map)), ladderize = FALSE ) +
+  facet_wrap(vars(.id), labeller = labeller(.id = method_labels)) +
+  geom_treescale(width = 10, x = 0.1) +
+  geom_tiplab(size=4, linesize=.5, align = FALSE, show.legend = F) + 
+  xlim(0, 30) + 
+  scale_color_manual(values = c('red', 'black', 'grey')) +
+  labs(colour = 'Method') +
+  theme_void() +
+  theme(legend.position = 'bottom',
+        text = element_text(size = 20))
+
+ggsave(paste0(fig_folder, '/FigS_IncI1_trees.pdf'), width = 10, height = 15, device="pdf")
 
