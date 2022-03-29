@@ -126,9 +126,9 @@ plasmid_plot <- ggplot(data=plas_pars_pvalue_df, aes(y = p_value, x = method) ) 
 
 plasmid_plot
 
-ggsave(paste0("../../figures/Pval_plasmid_parsimony.pdf"),
-       plot=last_plot(), width = 12, height = 12, device="pdf")  
-
+# ggsave(paste0("../../figures/Pval_plasmid_parsimony.pdf"),
+#        plot=last_plot(), width = 12, height = 12, device="pdf")  
+# 
 
 
 signif_plasmid_plot <- ggplot(plas_pars_pvalue_df, aes(y = gene, x = method)) + 
@@ -170,9 +170,16 @@ sorted_spec_res_genes <- names(sort(res_genes[spec_res_genes]))
 # write.csv(pars_dfs$real_parsimony, file = paste0(base_dir, '/Parsimony_resgenes_on_cgMLST_real.csv'), row.names = FALSE)
 
 perm_parsimony <- read.csv(paste0(base_dir, '/Parsimony_resgenes_on_cgMLST_perm.csv'), 
-                     stringsAsFactors = FALSE)
+                     stringsAsFactors = FALSE) %>%
+  filter(tree %in% c("cgMLST", "IncI1", "IncFIA", "IncFII_pRSB107")) #"IncFIB_AP001918"
 real_parsimony <- read.csv(paste0(base_dir, '/Parsimony_resgenes_on_cgMLST_real.csv'), 
-                     stringsAsFactors = FALSE)
+                     stringsAsFactors = FALSE) %>%
+  filter(tree %in% c("cgMLST", "IncI1", "IncFIA", "IncFII_pRSB107"))
+
+# new_pars_dfs <- compute_pars_dfs(methods, spec_res_genes, plasmid = c("IncFIB_AP001918"))
+# perm_parsimony <- bind_rows(perm_parsimony, new_pars_dfs$perm_parsimony)
+# real_parsimony <- bind_rows(real_parsimony, new_pars_dfs$real_parsimony)
+
 pars_dfs <- list('perm_parsimony' = perm_parsimony, 'real_parsimony' = real_parsimony)
 
 
@@ -184,8 +191,8 @@ plot_pars_densities(subset_pars_dfs, set_ncol = 5,
                     max_pars = floor(dim(tip_data)[1]/2),
                     adjust = 3, dot_dist = 0.2)
 
-ggsave(paste0("../../figures/Parsimony_resgenes_on_cgMLST.pdf"),
-       plot=last_plot(), width = 19, height = 14, device="pdf")
+# ggsave(paste0("../../figures/Parsimony_resgenes_on_cgMLST.pdf"),
+#        plot=last_plot(), width = 19, height = 14, device="pdf")
 
 # Resgenes on plasmids / cgMLST - large overview ----------
 
@@ -207,7 +214,8 @@ res_pars_pvalue_df <- pars_pvalue_df %>%
                               "cgMLST" = "Canu", #"Illumina",
                               "IncI1" = "SPAdes", #"NP",
                               "IncFIA" = "Unicycler", #"PB",
-                              "IncFII_pRSB107" = "Canu_Hybrid_Polished"))
+                              "IncFII_pRSB107" = "Canu_Hybrid_Polished",
+                              "IncFIB_AP001918" = "Canu_Hybrid_Polished"))
 
 
 res_plot <- ggplot(data=res_pars_pvalue_df, aes(y = p_value, x = tree, 
@@ -235,8 +243,8 @@ res_plot <- ggplot(data=res_pars_pvalue_df, aes(y = p_value, x = tree,
 
 res_plot
 
-ggsave(paste0("../../figures/Pval_resgene_parsimony_boxplot.pdf"),
-       plot=last_plot(), width = 17, height = 10, device="pdf")  
+# ggsave(paste0("../../figures/Pval_resgene_parsimony_boxplot.pdf"),
+#        plot=last_plot(), width = 17, height = 10, device="pdf")  
 
 ### New depictions ####################################
 
