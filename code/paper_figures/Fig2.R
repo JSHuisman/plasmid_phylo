@@ -82,7 +82,7 @@ ggplot(supp_fig) +
   facet_wrap(vars(plasmid_rep), ncol = 2) +
   labs(y = 'Method', x = 'Sample') +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 90),
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         panel.spacing.x = unit(3, 'lines'),
         strip.text = element_text(size = 20),
         axis.title = element_text(size = 20),
